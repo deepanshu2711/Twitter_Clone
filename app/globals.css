@@ -1,6 +1,13 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+html,
+body,
+:root{
+  background-color: black;
+}
+
  
 @layer base {
   :root {
