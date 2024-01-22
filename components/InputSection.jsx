@@ -4,7 +4,7 @@ import { Button } from "./ui/button";
 
 const InputSection = () => {
     return ( 
-        <div className="flex w-full gap-10 border-b border-gray-800">
+        <div className="flex w-full gap-4 md:gap-10 border-b border-gray-800">
             <div>
                 <Avatar className="md:ml-0 cursor-pointer">
                 <AvatarImage src="/1.png" />
