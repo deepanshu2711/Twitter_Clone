@@ -17,12 +17,12 @@ export default function RootLayout({ children }) {
       <body className={inter.className}>
       <div className="flex max-w-7xl mx-auto min-h-screen">
       <SideBar />
-      <div className="w-full lg:mr-600  border border-gray-800 sm:ml-24 md:ml-60">
+      <div className="w-full   border border-gray-800 sm:ml-24 md:ml-60">
       <Header />
       {children}
       </div>
       {/* 3rd Section */}
-      <div className="hidden lg:inline-flex mt-1`">
+      <div className="hidden lg:inline-flex max-w-96">
       <Widgets />
       </div>
 
