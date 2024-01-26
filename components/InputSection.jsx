@@ -1,15 +1,21 @@
+"use client"
 import { ImageIcon, SmileIcon } from "lucide-react";
-import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { Button } from "./ui/button";
+import { UserButton, useAuth } from "@clerk/nextjs";
 
 const InputSection = () => {
+    const { userId } = useAuth();
     return ( 
-        <div className="flex w-full gap-4 md:gap-10 border-b border-gray-800 p-4">
-            <div>
-                <Avatar className="md:ml-0 cursor-pointer">
+        <>
+        {
+            userId &&(
+                <div className="flex w-full gap-4 md:gap-10 border-b border-gray-800 p-4">
+            <div >
+                {/* <Avatar className="md:ml-0 cursor-pointer">
                 <AvatarImage src="/1.png" />
                 <AvatarFallback>CN</AvatarFallback>
-                </Avatar>
+                </Avatar> */}
+                <UserButton afterSignOutUrl="/"/>
             </div>
             <div className="w-full flex flex-col">
                 <div className="w-full ">
@@ -24,6 +30,10 @@ const InputSection = () => {
                 </div>
             </div>
         </div>
+            )
+        }
+            
+        </>
      );
 }
  
