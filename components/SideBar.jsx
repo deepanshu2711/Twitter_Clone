@@ -1,8 +1,11 @@
-import { ArrowDownLeftFromCircleIcon, Bell, Bookmark, Clipboard, Hash, HomeIcon, InboxIcon, MoreHorizontal, UserIcon } from "lucide-react";
+"use client"
+import {Bell, Bookmark, Clipboard, Hash, HomeIcon, InboxIcon, MoreHorizontal, UserIcon } from "lucide-react";
 import Image from "next/image";
 import MenuItem from "./MenuItem";
 import { Button } from "./ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
+
+
 
 const menuItems = [
     {
@@ -40,8 +43,9 @@ const menuItems = [
 ]
 
 const SideBar = () => {
+    
     return ( 
-        <div className="h-screen w-auto md:w-60 p-4 fixed   hidden sm:flex sm:flex-col">
+        <div className={`h-screen w-auto md:w-60 p-4 fixed   hidden sm:flex sm:flex-col `}>
             <div className="cursor-pointer">
                 {/* Logo */}
                 <Image src={"/x.webp"} width={50} height={50} alt="logo" />

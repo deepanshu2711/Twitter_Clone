@@ -70,7 +70,7 @@ const Widgets = () => {
                 
             </div>
 
-            <div className="mt-8 flex flex-col gap-2 bg-gray-900 rounded-lg">
+            <div className="mt-8 flex flex-col gap-2 bg-gray-900 rounded-xl sticky top-16">
                 {/* Who To Follow */}
                 {
                     WhoToFollow &&(

@@ -1,8 +1,12 @@
+
 import { Inter } from "next/font/google";
 import "./globals.css";
 import SideBar from "@/components/SideBar";
 import Header from "@/components/Header";
 import Widgets from "@/components/Widgets";
+import { SessionProvider } from "next-auth/react"
+import { ClerkProvider } from '@clerk/nextjs'
+
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -12,22 +16,14 @@ export const metadata = {
 };
 
 export default function RootLayout({ children }) {
-  return (
-    <html lang="en">
-      <body className={inter.className}>
-      <div className="flex max-w-7xl mx-auto min-h-screen">
-      <SideBar />
-      <div className="w-full   border border-gray-800 sm:ml-24 md:ml-60">
-      <Header />
-      {children}
-      </div>
-      {/* 3rd Section */}
-      <div className="hidden lg:inline-flex max-w-96">
-      <Widgets />
-      </div>
 
-      </div>
+  return (
+    <ClerkProvider>
+    <html lang="en" >
+      <body className={inter.className}>
+        {children}
       </body>
     </html>
+    </ClerkProvider>
   );
 }

@@ -1,6 +1,10 @@
+import Header from "@/components/Header";
 import InputSection from "@/components/InputSection";
 import Post from "@/components/Post";
+import SideBar from "@/components/SideBar";
+import Widgets from "@/components/Widgets";
 import Image from "next/image";
+
 
 
 const posts =[
@@ -26,9 +30,19 @@ const posts =[
 ]
 
 export default function Home() {
+  
+
+  
   return (
-    <div className="p-4">
+    <div className="">
+      
+      <div className={`flex max-w-7xl mx-auto min-h-screen`}>
+      <SideBar />
+      <div className="w-full   border border-gray-800 sm:ml-24 md:ml-60">
+      <Header />
       <InputSection />
+      <div className="p-4">
+      
 
       {/* Posts */}
 
@@ -45,6 +59,14 @@ export default function Home() {
           />
         ))
       }
+      
+      </div>
+      </div>
+      {/* 3rd Section */}
+      <div className="hidden lg:inline-flex max-w-96">
+      <Widgets />
+      </div>
+      </div>
     </div>
   );
 }
