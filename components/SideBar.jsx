@@ -40,6 +40,8 @@ const SideBar = () => {
     const{userId} = useAuth()
     
     
+    
+    
     return ( 
         <div className={`h-screen w-auto md:w-60 p-4 fixed   hidden sm:flex sm:flex-col `}>
             <div className="cursor-pointer">
@@ -66,7 +68,7 @@ const SideBar = () => {
                 {/* Button */}
 
                 <Button className="text-lg w-auto md:w-full mt-4 rounded-2xl bg-blue-500">
-                { userId ? "Post" : <SignInButton />}
+                { userId ? <p>Post</p> : <SignInButton />}
                 </Button>
             </div>
             {
