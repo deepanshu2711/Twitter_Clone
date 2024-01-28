@@ -3,17 +3,20 @@ import {  ImageIcon, SmileIcon, X } from "lucide-react";
 import {getStorage, ref, uploadBytesResumable, getDownloadURL} from 'firebase/storage';            
 import { Button } from "./ui/button";
 import { UserButton, useAuth } from "@clerk/nextjs";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { app } from "@/utils/Firebase";
 import { useUser } from "@clerk/nextjs";
+
 
 const InputSection = () => {
     const { userId } = useAuth();
     const {user} = useUser();    
     const fileInputRef = useRef(null);
+    const[posting,setPosting] = useState(false);
     const[file,setFile] = useState(undefined);
     const[preview,setPreview] = useState(undefined);
+    
     const [Formdata,setformData] = useState({
         userId :userId,
         input:"",
@@ -37,73 +40,89 @@ const InputSection = () => {
     }
 
 
-    const handleFileUpload=async()=>{
-        if(file){
-            const storage = getStorage(app);
-            const fileName = new Date().getTime()+file.name;
-            const storageRef = ref(storage,fileName);
-            const uploadTask = uploadBytesResumable(storageRef, file);
-            uploadTask.on('state_changed',
-            async(snapshot) => {
-                const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-                console.log('Upload is ' + progress + '% done');
-            },
-            (error) => {
-                console.log(error);
-            },
-            () => {
-                   getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-                    console.log('File available at', downloadURL);
-                    setformData({
-                        ...Formdata,
-                        imageUrl:downloadURL
-                    })
-                    console.log(Formdata)
-                    
-                });
-            }
-            )
-        }
-    }
-    
-    console.log(Formdata)
-
-
-    const sendPost =async() =>{
-        
-        
-        console.log(Formdata)
+    const handleFileUpload = async () => {
         try {
-            await fetch("/api/user/post",{
-                method:"POST",
-                headers:{
-                    "Content-Type":"application/json"
+            setPosting(true)
+            if (file) {
+                const storage = getStorage(app);
+                const fileName = new Date().getTime() + file.name;
+                const storageRef = ref(storage, fileName);
+                const uploadTask = uploadBytesResumable(storageRef, file);
+    
+                uploadTask.on(
+                    'state_changed',
+                    async (snapshot) => {
+                        const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                        console.log('Upload is ' + progress + '% done');
+                    },
+                    (error) => {
+                        console.log(error);
+                    },
+                    async () => {
+                        try {
+                            const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
+                            console.log('File available at', downloadURL);
+                            setformData({
+                                ...Formdata,
+                                imageUrl: downloadURL
+                            });
+                            
+                        } catch (error) {
+                            console.error("Error getting download URL:", error);
+                        }
+                    }
+                );
+            } else {
+                sendPost();
+            }
+            
+        } catch (error) {
+            console.error("Error uploading file:", error);
+        }
+    };
+
+
+    useEffect(() => {
+        if (Formdata.imageUrl !== "") {
+            sendPost();
+        }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [Formdata.imageUrl]);
+    
+    const handlePostSubmission = () => {
+        preview && URL.revokeObjectURL(preview);
+        setPreview(undefined);
+        setFile(undefined);
+        setformData({
+            userId: userId,
+            input: "",
+            imageUrl: "",
+        });
+    };
+    
+    const sendPost = async () => {
+        try {
+            console.log(Formdata);
+    
+            await fetch("/api/user/post", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
                 },
-                body:JSON.stringify(Formdata)
-            },{
-                cache:"no-store"
-            })
-            preview && URL.revokeObjectURL(preview);
-            setPreview(undefined);
-            setFile(undefined);
-            setformData({
-                userId :userId,
-                input:"",
-                imageUrl:"",
-                name:user.firstName,
-                username:user?.username
-            })
+                body: JSON.stringify(Formdata)
+            }, {
+                cache: "no-store"
+            });
+    
+            handlePostSubmission();
+            setPosting(false);
         } catch (error) {
             console.log(error);
+            setPosting(false);
         }
-    }
-    // const handlePost = async() => {
-        
-    //     await handleFileUpload(file);
-    //     console.log(Formdata)
-    //     await sendPost();
-        
-    // };
+    };
+    
+    
 
     
     return ( 
@@ -122,7 +141,7 @@ const InputSection = () => {
                     {
                         file && (
                             <div >
-                                <X  onClick={() => setFile(undefined)} className= "cursor-pointer text-white border rounded-full absolute ml-72 mt-2 bg-black " />
+                                {posting ? null :<X   onClick={() => setFile(undefined)} className= "cursor-pointer text-white border rounded-full absolute ml-72 mt-2 bg-black " /> }
                                 <Image  src={preview} alt="selectedImage" width={315} height={300} />
                             </div>
                         )
@@ -137,8 +156,8 @@ const InputSection = () => {
                     <ImageIcon className="cursor-pointer" onClick={handleFileClink} />
                     <SmileIcon className="cursor-pointer" />
                     </div>
-                    <Button onClick={handleFileUpload} className ="rounded-full p-5 bg-blue-500 mt-4" disabled={!file}>Upload Image</Button>
-                    <Button onClick={sendPost} className ="rounded-full p-5 bg-blue-500 mt-4" disabled={!Formdata.input}>Post</Button>
+                    {/* <Button onClick={handleFileUpload} className ="rounded-full p-5 bg-blue-500 mt-4" disabled={!file}>Upload Image</Button> */}
+                    <Button onClick={handleFileUpload} className ="rounded-full p-5 bg-blue-500 mt-4" disabled={!Formdata.input || posting}>Post</Button>
                 </div>
             </div>
         </div>

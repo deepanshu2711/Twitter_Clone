@@ -6,11 +6,9 @@ import { currentUser, auth } from "@clerk/nextjs";
 export const POST = async (request) => {
     const user = await currentUser();
     const name = user.firstName
-    const username = user?.username
     try {
         await ConnectDB();
         const{userId,input,imageUrl} = await request.json();
-        console.log(userId,input,imageUrl,name,username);
         if (!userId || !input) {
             throw new Error("userId and input are required.");
         }
