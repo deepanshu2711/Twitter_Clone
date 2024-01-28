@@ -1,5 +1,5 @@
 "use client"
-import {  ImageIcon, SmileIcon, X } from "lucide-react";    
+import {  ImageIcon, SmileIcon, Terminal, X } from "lucide-react";    
 import {getStorage, ref, uploadBytesResumable, getDownloadURL} from 'firebase/storage';            
 import { Button } from "./ui/button";
 import { UserButton, useAuth } from "@clerk/nextjs";
@@ -7,6 +7,9 @@ import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { app } from "@/utils/Firebase";
 import { useUser } from "@clerk/nextjs";
+
+
+
 
 
 const InputSection = () => {
@@ -98,6 +101,7 @@ const InputSection = () => {
             input: "",
             imageUrl: "",
         });
+
     };
     
     const sendPost = async () => {
@@ -155,6 +159,7 @@ const InputSection = () => {
                     }} type="file" name="imgUrl" hidden ref={fileInputRef}  />
                     <ImageIcon className="cursor-pointer" onClick={handleFileClink} />
                     <SmileIcon className="cursor-pointer" />
+
                     </div>
                     {/* <Button onClick={handleFileUpload} className ="rounded-full p-5 bg-blue-500 mt-4" disabled={!file}>Upload Image</Button> */}
                     <Button onClick={handleFileUpload} className ="rounded-full p-5 bg-blue-500 mt-4" disabled={!Formdata.input || posting}>Post</Button>

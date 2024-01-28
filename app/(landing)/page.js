@@ -1,9 +1,11 @@
+"use client"
 import Header from "@/components/Header";
 import InputSection from "@/components/InputSection";
 import Post from "@/components/Post";
 import SideBar from "@/components/SideBar";
 import Widgets from "@/components/Widgets";
-import Image from "next/image";
+
+import { useEffect, useState } from "react";
 
 
 
@@ -31,6 +33,19 @@ const posts =[
 
 export default function Home() {
   
+  const[postsData,setPostsData] = useState([]);
+
+  useEffect(()=>{
+    const getPosts = async()=>{
+      const res = await fetch("/api/user/getPosts",{cache:"no-store"});
+      const data = await res.json();
+      console.log(data)
+      setPostsData(data.posts);
+
+    }
+    getPosts();
+  },[])
+  console.log(postsData)
 
   
   return (
@@ -47,15 +62,14 @@ export default function Home() {
       {/* Posts */}
 
       {
-        posts.map((post) => (
+        postsData.map((post) => (
           <Post
-            key={post.id}
+            key={post._id}
             name={post.name}
-            username={post.username}
-            avatar={post.avatar}
-            img={post.img}
-            text={post.text}
-            timestamp={post.timestamp}
+            avatar={post.profilePic}
+            img={post.imageUrl}
+            text={post.input}
+            timestamp={post.createdAt}
           />
         ))
       }

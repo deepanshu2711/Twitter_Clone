@@ -2,7 +2,8 @@ import { BarChart2Icon, CloudCog, CloudIcon, HeartIcon, LucideTextSelection, Mes
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import Image from "next/image";
 
-const Post = ({name,username,avatar,img,text,timestamp}) => {
+const Post = ({name,avatar,img,text,timestamp}) => {
+    const time = new Date(timestamp);
     return ( 
         <div className="text-white flex gap-4 md:gap-10 w-full mt-2 mb-4 border-b border-gray-800">
             <div>
@@ -16,8 +17,8 @@ const Post = ({name,username,avatar,img,text,timestamp}) => {
                     <div className="flex gap-2">   
                         {/* Name and username */}
                         <p className="font-bold hover:underline cursor-pointer">{name}</p>
-                        <p className="text-muted-foreground cursor-pointer">@{username}</p>
-                        <p className="text-muted-foreground">{timestamp}</p>
+                        {/* <p className="text-muted-foreground cursor-pointer">@{username}</p> */}
+                        <p className="text-muted-foreground">{time.toISOString().slice(0, 10)}</p>
                     </div>
                     <div>
                         {/* Icon */}
@@ -30,7 +31,12 @@ const Post = ({name,username,avatar,img,text,timestamp}) => {
                 </div>
                 <div className="">
                     {/* Post Image */}
-                    <Image className="rounded-2xl w-full max-h-[500px] object-cover"  src={img} width={300} height={300}   alt="postimage" />
+                    {
+                        img &&(
+                            <Image className="rounded-2xl w-full max-h-[500px] object-cover"  src={img} width={300} height={300}   alt="postimage" />
+                        )
+                    }
+                    
                 </div>
                 <div className="flex mt-8 items-center justify-between mb-4">
                 {/* Icons */}

@@ -19,6 +19,9 @@ const postSchema = mongoose.Schema({
     },
     username:{
         type:String
+    },
+    profilePic:{
+        type:String
     }
 },{
     timestamps:true
