@@ -12,6 +12,13 @@ const postSchema = mongoose.Schema({
     },
     imageUrl:{
         type:String
+    },
+    name:{
+        type:String,
+        required:true
+    },
+    username:{
+        type:String
     }
 },{
     timestamps:true
