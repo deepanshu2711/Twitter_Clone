@@ -22,6 +22,10 @@ const postSchema = mongoose.Schema({
     },
     profilePic:{
         type:String
+    },
+    likes:{
+        type:Array,
+        default:[]
     }
 },{
     timestamps:true

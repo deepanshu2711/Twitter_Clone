@@ -117,6 +117,7 @@ const InputSection = () => {
             }, {
                 cache: "no-store"
             });
+            window.location.reload();
     
             handlePostSubmission();
             setPosting(false);

@@ -9,28 +9,6 @@ import { useEffect, useState } from "react";
 
 
 
-const posts =[
-  {
-    id:1,
-    name:"deepanshu",
-    username:"deepanshu603",
-    avatar:"/1.png",
-    img:"/owl.jpg",
-    text:"AI Owl",
-    timestamp:"2h",
-  },
-  {
-    id:2,
-    name:"deepanshu",
-    username:"deepanshu603",
-    avatar:"/1.png",
-    img:"/tiger.jpg",
-    text:"Girl with beast",
-    timestamp:"4h",
-  },
-
-]
-
 export default function Home() {
   
   const[postsData,setPostsData] = useState([]);
@@ -70,6 +48,9 @@ export default function Home() {
             img={post.imageUrl}
             text={post.input}
             timestamp={post.createdAt}
+            postId ={post._id}
+            likesArray={post.likes}
+            userid={post.userId}
           />
         ))
       }
