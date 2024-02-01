@@ -6,14 +6,18 @@ import { useEffect, useState } from "react";
 import { useUser } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "./ui/dropdown-menu";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "./ui/dialog";
+import { Button } from "./ui/button";
 
 
-const Post = ({name,avatar,img,text,timestamp,postId,likesArray,userid}) => {
+const Post = ({name,avatar,img,text,timestamp,postId,likesArray,userid,comments}) => {
     const time = new Date(timestamp);
     const[UniqueLikesArray,setUniqueLikesArray] = useState([]);
     const[liked,setLiked] = useState(false);
     const {user} = useUser();
     const router = useRouter();
+    const[dataLike,setDataLike] = useState(likesArray);
+    const[comment,setComment] = useState(false);
 
     useEffect(() => {
         // Remove duplicate values from likesArray using Set
@@ -22,20 +26,28 @@ const Post = ({name,avatar,img,text,timestamp,postId,likesArray,userid}) => {
         setUniqueLikesArray(uniqueLikesArray);
     }, [likesArray]);
     
+
+    useEffect(() => {
+        handleLike()
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+      }, [liked]);
     
 
     async function handleLike(){
-         setLiked(!liked)
-         console.log(liked)
+         console.log(liked);
         try {
-            await fetch("api/user/like",{
+            const res = await fetch("api/user/like",{
                 method:"POST",
                 headers:{
                     "Content-Type":"application/json"
                 },
-                body:JSON.stringify({userId:user.id,postId:postId,like:!liked})
+                body:JSON.stringify({userId:user && user.id,postId:postId,like:liked})
+            },{
+                cache:"no-store"
             })
-            
+            const data = await res.json();
+            setDataLike(data.post.likes)
+
         } catch (error) {
             console.log(error)
         }
@@ -49,6 +61,22 @@ const Post = ({name,avatar,img,text,timestamp,postId,likesArray,userid}) => {
                     "Content-Type":"application/json"
                 },
                 body:JSON.stringify({userId:user.id,postId:postId})
+            })
+            window.location.reload();
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+
+    async function handleCommentClick(){
+        try {
+            await fetch("/api/user/comment",{
+                method:"POST",
+                heafers:{
+                    "Content-Type":"application/json"
+                },
+                body:JSON.stringify({userId:user&&user.id,postId:postId,comment:comment,name:user && user.firstName,profilePic:user && user.imageUrl})
             })
             window.location.reload();
         } catch (error) {
@@ -75,9 +103,7 @@ const Post = ({name,avatar,img,text,timestamp,postId,likesArray,userid}) => {
                         <p className="text-muted-foreground">{time.toISOString().slice(0, 10)}</p>
                     </div>
                     <div>
-                        {/* Icon */}
-                        
-                        
+                        {/* Icon */}     
                         {
                             user && user.id === userid && (
                                 <DropdownMenu className="cursor-pointer bg-black">
@@ -114,11 +140,57 @@ const Post = ({name,avatar,img,text,timestamp,postId,likesArray,userid}) => {
                 </div>
                 <div className="flex mt-8 items-center justify-between mb-4">
                 {/* Icons */}
-                    <MessageCircle className="cursor-pointer hover:text-blue-500" />
+                    <div className="flex gap-2 items-center">
+                    <Dialog>
+                    <DialogTrigger>
+                    <MessageCircle  className="cursor-pointer hover:text-blue-500" />
+                    </DialogTrigger>
+                    <DialogContent className="bg-black">
+                    <DialogHeader>
+                    <DialogTitle>
+                        <div className="flex items-center gap-4">
+                            <div className="flex items-center gap-2">
+                            <Avatar className="md:ml-0 cursor-pointer">
+                            <AvatarImage src={avatar} />
+                            <AvatarFallback>CN</AvatarFallback>
+                            </Avatar>
+                            </div>
+                            <div className="text-white text-sm ml-4 flex flex-col">
+                                <div className="text-muted-foreground flex gap-2 text-sm">
+                                    <p>{name}</p>
+                                    <p>{time.toISOString().slice(0, 10)}</p>
+                                </div>
+                                <p>{text}</p>
+                            </div>
+                        </div>
+                    </DialogTitle>
+                    <DialogDescription>
+                    <div className="mt-8 flex items-start justify-between gap-8">
+                        <div>
+                        <Avatar className="md:ml-0 cursor-pointer">
+                            <AvatarImage src={user && (user.imageUrl)} />
+                            <AvatarFallback>CN</AvatarFallback>
+                            </Avatar>
+                        </div>
+                        <div className="w-full">
+                           <p className="text-muted-foreground text-sm mb-1">Replying to {user && user.firstName}</p>
+                            <textarea onChange={(e) =>setComment(e.target.value)}  name="comment"  rows={4} className="bg-transparent text-white min-w-full focus-within:outline-none" placeholder="Post yout reply" />
+                        </div>
+                        
+                    </div>
+                        <div className="w-full flex items-center justify-end">
+                            <Button disabled={!comment} onClick={handleCommentClick} className="rounded-full p-5 bg-blue-500 mt-4">Reply</Button>
+                        </div>
+                    </DialogDescription>
+                    </DialogHeader>
+                    </DialogContent>
+                    </Dialog>
+                    <p>{comments}</p>
+                    </div>
                     <TrashIcon className="cursor-pointer"/>
                     <div className={`flex gap-2 ${user && UniqueLikesArray.find((id) => id === user.id) ? "text-red-500" : "" }`}>
-                    <HeartIcon className={`cursor-pointer hover:text-red-500 `} onClick={handleLike}/>
-                    <p className="text-sm text-gray-500">{UniqueLikesArray.length}</p>
+                    <HeartIcon className={`cursor-pointer hover:text-red-500 `} onClick={() => setLiked(!liked)}/>
+                    <p className="text-sm text-gray-500">{dataLike.length}</p>
                     </div>
                     <ShareIcon className="cursor-pointer"/>   
                     <BarChart2Icon className="cursor-pointer"/>            

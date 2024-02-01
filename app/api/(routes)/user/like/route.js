@@ -11,6 +11,9 @@ export const POST = async (request) => {
             return new Response(JSON.stringify({ message: "Post not found" }), { status: 404 });
         }
         if (like) {
+            if (post.likes.includes(userId)) {
+                return new Response(JSON.stringify({ post }), { status: 200 });
+            }
             await Post.updateOne({ _id: postId }, { $push: { likes: userId } });
             return new Response(JSON.stringify({post}), { status: 200 });
         }

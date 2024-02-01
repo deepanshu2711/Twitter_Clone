@@ -51,6 +51,7 @@ export default function Home() {
             postId ={post._id}
             likesArray={post.likes}
             userid={post.userId}
+            comments={post.comment}
           />
         ))
       }
