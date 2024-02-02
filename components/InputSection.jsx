@@ -136,7 +136,7 @@ const InputSection = () => {
             userId &&(
                 <div className="flex w-full gap-4 md:gap-10 border-b border-gray-800 p-4">
             <div >
-                <UserButton afterSignOutUrl="/"/>
+                <UserButton  afterSignOutUrl="/"/>
             </div>
             <div className="w-full flex flex-col">
                 <div className="w-full ">

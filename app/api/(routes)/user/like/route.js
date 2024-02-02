@@ -17,12 +17,14 @@ export const POST = async (request) => {
             await Post.updateOne({ _id: postId }, { $push: { likes: userId } });
             return new Response(JSON.stringify({post}), { status: 200 });
         }
-        if (!like) {
+        if (!like && post.likes.includes(userId)) {
             await Post.updateOne({ _id: postId }, { $pull: { likes: userId } });
             return new Response(JSON.stringify({ post }), { status: 200 });
         }
+        return new Response(JSON.stringify({ message: "No action performed" }), { status: 200 });
     } catch (error) {
         console.log(error);
         return new Response(JSON.stringify({ message: "Failed" }), { status: 500 });
     }
 }
+

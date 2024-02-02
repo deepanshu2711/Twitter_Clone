@@ -31,7 +31,7 @@ export default function Home() {
       
       <div className={`flex max-w-7xl mx-auto min-h-screen`}>
       <SideBar />
-      <div className="w-full   border border-gray-800 sm:ml-24 md:ml-60">
+      <div className="w-full border border-gray-800 sm:ml-24 md:ml-60">
       <Header />
       <InputSection />
       <div className="p-4">
