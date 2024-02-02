@@ -9,6 +9,7 @@ import { IoMdHeart } from "react-icons/io";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "./ui/dropdown-menu";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "./ui/dialog";
 import { Button } from "./ui/button";
+import { useAuth } from "@clerk/nextjs";
 
 
 const Post = ({name,avatar,img,text,timestamp,postId,likesArray,userid,comments}) => {
@@ -18,6 +19,7 @@ const Post = ({name,avatar,img,text,timestamp,postId,likesArray,userid,comments}
     const[comment,setComment] = useState(false);
     const[isLiked,setIsLiked] = useState();
     const[likesCount,setLikesCount] = useState(likesArray.length)
+    const{sessionId} = useAuth();
     
 
     useEffect(() => {
@@ -36,6 +38,7 @@ const Post = ({name,avatar,img,text,timestamp,postId,likesArray,userid,comments}
     
     async function handleLike(){
         try {
+            
             const res = await fetch("/api/user/like" ,{
                 method:"POST",
                 headers:{
@@ -44,6 +47,7 @@ const Post = ({name,avatar,img,text,timestamp,postId,likesArray,userid,comments}
                 body:JSON.stringify({userId:user&&user.id,postId:postId,like:isLiked})
             },{caches:"no-store"})
             const data = await res.json();
+            console.log(data)
             
         } catch (error) {
             console.log(error)
@@ -74,13 +78,15 @@ const Post = ({name,avatar,img,text,timestamp,postId,likesArray,userid,comments}
 
     async function handleCommentClick(){
         try {
-            await fetch("/api/user/comment",{
+            const res =await fetch("/api/user/comment",{
                 method:"POST",
                 heafers:{
                     "Content-Type":"application/json"
                 },
                 body:JSON.stringify({userId:user&&user.id,postId:postId,comment:comment,name:user && user.firstName,profilePic:user && user.imageUrl})
             })
+            const data = await res.json();
+            console.log(data)
             window.location.reload();
         } catch (error) {
             console.log(error)
@@ -150,7 +156,7 @@ const Post = ({name,avatar,img,text,timestamp,postId,likesArray,userid,comments}
                     <div className="flex gap-2 items-center">
                     <Dialog>
                     <DialogTrigger>
-                    <MessageCircle id="icon"  className="cursor-pointer hover:text-blue-500" />
+                    {user && <MessageCircle id="icon"  className="cursor-pointer hover:text-blue-500" />}
                     </DialogTrigger>
                     <DialogContent className="bg-black">
                     <DialogHeader>
@@ -192,15 +198,19 @@ const Post = ({name,avatar,img,text,timestamp,postId,likesArray,userid,comments}
                     </DialogHeader>
                     </DialogContent>
                     </Dialog>
-                    <p>{comments}</p>
+                    <p>{user && comments}</p>
                     </div>
                     
-                    <div className={`flex gap-2 items-center`}>
-                    <IoMdHeart id="icon"  className ={`h-6 w-6 cursor-pointer ${isLiked?"text-red-500":""}`} onClick={() => {setIsLiked(!isLiked);{!isLiked?setLikesCount(likesCount+1):setLikesCount(likesCount-1)}}}/>
-                    <p className="text-sm text-gray-500">{likesCount}</p>
+                    {
+                        user && (
+                            <div className={`flex gap-2 items-center`}>
+                            <IoMdHeart id="icon"  className ={`h-6 w-6 cursor-pointer ${isLiked?"text-red-500":""}`} onClick={() => {setIsLiked(!isLiked);{!isLiked?setLikesCount(likesCount+1):setLikesCount(likesCount-1)}}}/>
+                            <p className="text-sm text-gray-500">{likesCount}</p>
                     </div>
-                    <ShareIcon id="icon" className="cursor-pointer"/>   
-                    <BarChart2Icon id="icon" className="cursor-pointer"/>            
+                        )
+                    }
+                    {user && <ShareIcon id="icon" className="cursor-pointer"/>}   
+                    {user && <BarChart2Icon id="icon" className="cursor-pointer"/>  }          
                 </div>
             </div>
         </div>

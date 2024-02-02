@@ -1,8 +1,10 @@
 import Post from "@/models/postModel";
 import { ConnectDB } from "@/utils/MongoDb";
+import { auth } from "@clerk/nextjs";
 
 export const POST = async (request) => {
     const { userId, postId, like } = await request.json();
+    
     try {
         await ConnectDB();
         

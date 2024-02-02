@@ -47,7 +47,7 @@ const FullPost = () => {
     },[])
 
     return ( 
-        <div className="flex justify-start  max-w-7xl mx-auto">
+        <div className="flex justify-start min-h-screen  max-w-7xl mx-auto">
             <div className="sm:ml-24 sm:mr-24 md:mr-96 w-full md:ml-60 border border-gray-800 p-4">
                 <div className="flex flex-col">
                         {/* head part */}

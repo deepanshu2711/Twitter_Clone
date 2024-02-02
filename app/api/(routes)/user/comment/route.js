@@ -1,9 +1,14 @@
 import Post from "@/models/postModel";
 import Comment from "@/models/PostCommentModel";
 import { ConnectDB } from "@/utils/MongoDb"
+import { auth } from "@clerk/nextjs";
 
 export const POST =async(request)=>{
+    const {userId:currentUserId} = auth();
     try {
+        if(!currentUserId) {
+            return new Response(JSON.stringify({message:"unauthorized"}),{status:401});
+        }
         await ConnectDB();
         const {postId,userId,comment,name,profilePic} = await request.json();
         await Comment.create({postId,userId,comment,name,profilePic});
