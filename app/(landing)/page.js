@@ -2,9 +2,6 @@
 import Header from "@/components/Header";
 import InputSection from "@/components/InputSection";
 import Post from "@/components/Post";
-import SideBar from "@/components/SideBar";
-import Widgets from "@/components/Widgets";
-
 import { useEffect, useState } from "react";
 
 
@@ -17,7 +14,6 @@ export default function Home() {
     const getPosts = async()=>{
       const res = await fetch("/api/user/getPosts",{cache:"no-store"});
       const data = await res.json();
-      console.log(data)
       setPostsData(data.posts);
 
     }
@@ -27,10 +23,8 @@ export default function Home() {
 
   
   return (
-    <div className="">
+    <div className="md:mr-60 lg:mr-60 w-full">
       
-      <div className={`flex max-w-7xl mx-auto min-h-screen`}>
-      <SideBar />
       <div className="w-full border border-gray-800 sm:ml-24 md:ml-60">
       <Header />
       <InputSection />
@@ -59,10 +53,8 @@ export default function Home() {
       </div>
       </div>
       {/* 3rd Section */}
-      <div className="hidden lg:inline-flex max-w-96">
-      <Widgets />
-      </div>
-      </div>
+      
+      
     </div>
   );
 }

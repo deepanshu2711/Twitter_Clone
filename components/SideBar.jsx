@@ -5,13 +5,13 @@ import MenuItem from "./MenuItem";
 import { Button } from "./ui/button";
 import { SignInButton, UserButton,useAuth } from "@clerk/nextjs"
 import { useUser } from "@clerk/nextjs";
-
+import { useRouter } from "next/navigation";
 
 
 const menuItems = [
     {
         icon:Bell,
-        lable:"Notification"
+        lable:"Notification",
     },
     {
         icon:InboxIcon,
@@ -27,7 +27,8 @@ const menuItems = [
     },
     {
         icon:UserIcon,
-        lable:"Profile"
+        lable:"Profile",
+        href:"/profile"
     },
     {
         icon:MoreHorizontal,
@@ -38,6 +39,7 @@ const menuItems = [
 const SideBar = () => {
     const{user} = useUser()
     const{userId} = useAuth()
+    const router = useRouter()
     
     
     
@@ -48,7 +50,9 @@ const SideBar = () => {
                 {/* Logo */}
                 <Image src={"/x.webp"} width={50} height={50} alt="logo" />
             </div>
-            <MenuItem icon={HomeIcon} lable="Home" />
+            <div onClick={() =>{router.push("/")}}>
+            <MenuItem icon={HomeIcon} lable="Home" href={"/"}  />
+            </div>
             <MenuItem icon={Hash} lable="Explore"/>
             {
                 userId&&(
@@ -56,7 +60,7 @@ const SideBar = () => {
                 {/* Menu Items */}
                 {
                     menuItems.map((item) => (
-                        <MenuItem key={item.lable} icon={item.icon} lable={item.lable} />
+                        <MenuItem key={item.lable} icon={item.icon} lable={item.lable} href={item.href} />
                     ))
                 }
 
