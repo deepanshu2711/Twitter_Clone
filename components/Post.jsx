@@ -19,7 +19,7 @@ const Post = ({name,avatar,img,text,timestamp,postId,likesArray,userid,comments}
     const[comment,setComment] = useState(false);
     const[isLiked,setIsLiked] = useState();
     const[likesCount,setLikesCount] = useState(likesArray.length)
-    const{sessionId} = useAuth();
+
     
 
     useEffect(() => {
